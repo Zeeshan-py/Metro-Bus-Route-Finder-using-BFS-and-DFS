@@ -81,6 +81,8 @@ const routeCount = document.getElementById("routeCount");
 const routeLine = document.getElementById("routeLine");
 const routeSteps = document.getElementById("routeSteps");
 const segmentTable = document.getElementById("segmentTable");
+const pathCount = document.getElementById("pathCount");
+const segmentCount = document.getElementById("segmentCount");
 const routeTitle = document.getElementById("routeTitle");
 const distanceValue = document.getElementById("distanceValue");
 const stationValue = document.getElementById("stationValue");
@@ -221,6 +223,9 @@ function renderRouteLine(path) {
 function renderRouteDetails(path) {
     routeSteps.innerHTML = "";
     segmentTable.innerHTML = "";
+    pathCount.textContent = `${path.length} ${path.length === 1 ? "stop" : "stops"}`;
+    const totalSegments = Math.max(path.length - 1, 0);
+    segmentCount.textContent = `${totalSegments} ${totalSegments === 1 ? "segment" : "segments"}`;
 
     path.forEach((station) => {
         const item = document.createElement("li");

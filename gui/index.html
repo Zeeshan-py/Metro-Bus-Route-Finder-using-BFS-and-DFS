@@ -97,13 +97,19 @@
             <p id="routeMessage" class="route-message" aria-live="polite"></p>
 
             <div class="details-grid">
-                <section>
-                    <h3>Route path</h3>
+                <section class="route-details-panel">
+                    <div class="details-heading">
+                        <h3>Route path</h3>
+                        <span id="pathCount" class="count-badge">0 stops</span>
+                    </div>
                     <ol id="routeSteps" class="route-steps"></ol>
                 </section>
 
-                <section>
-                    <h3>Segment distances</h3>
+                <section class="segment-details-panel">
+                    <div class="details-heading">
+                        <h3>Segment distances</h3>
+                        <span id="segmentCount" class="count-badge">0 segments</span>
+                    </div>
                     <div id="segmentTable" class="segment-table"></div>
                 </section>
             </div>

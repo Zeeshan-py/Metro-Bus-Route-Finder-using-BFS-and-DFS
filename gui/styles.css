@@ -264,6 +264,7 @@ input {
 .map-panel {
     padding: 24px;
     overflow: hidden;
+    min-width: 0;
 }
 
 .route-message {
@@ -327,27 +328,49 @@ button:focus-visible {
 
 .route-line {
     display: flex;
-    gap: 14px;
+    gap: 0;
     align-items: flex-start;
-    margin: 34px 0;
-    padding: 12px 0 24px;
+    margin: 28px 0 32px;
+    padding: 26px 22px 22px;
     overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f8faf8;
+    scrollbar-color: #91a198 #edf2ef;
+    scrollbar-width: thin;
+}
+
+.route-line::-webkit-scrollbar {
+    height: 10px;
+}
+
+.route-line::-webkit-scrollbar-track {
+    background: #edf2ef;
+}
+
+.route-line::-webkit-scrollbar-thumb {
+    border: 2px solid #edf2ef;
+    border-radius: 8px;
+    background: #91a198;
 }
 
 .station-node {
     position: relative;
-    min-width: 90px;
+    flex: 0 0 112px;
+    min-width: 112px;
+    padding: 0 8px;
     text-align: center;
     color: var(--muted);
     font-size: 12px;
+    line-height: 1.25;
 }
 
 .station-node::before {
     content: "";
     display: block;
-    width: 18px;
-    height: 18px;
-    margin: 0 auto 10px;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto 12px;
     border-radius: 50%;
     background: white;
     border: 3px solid #b7c2bb;
@@ -356,9 +379,9 @@ button:focus-visible {
 .station-node::after {
     content: "";
     position: absolute;
-    top: 8px;
-    left: calc(50% + 12px);
-    width: calc(100% - 10px);
+    top: 9px;
+    left: calc(50% + 13px);
+    width: calc(100% - 26px);
     height: 3px;
     background: #cbd6d0;
 }
@@ -382,8 +405,8 @@ button:focus-visible {
 
 .details-grid {
     display: grid;
-    grid-template-columns: minmax(260px, 0.9fr) 1.1fr;
-    gap: 20px;
+    grid-template-columns: minmax(300px, 0.8fr) minmax(440px, 1.2fr);
+    gap: 28px;
 }
 
 .details-grid section {
@@ -391,21 +414,69 @@ button:focus-visible {
     padding-top: 18px;
 }
 
-.details-grid h3 {
-    margin-bottom: 12px;
+.details-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.details-heading h3 {
+    font-size: 18px;
+}
+
+.count-badge {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--soft-green);
+    color: var(--green-dark);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .route-steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     margin: 0;
-    padding-left: 20px;
-    line-height: 1.8;
+    padding: 0;
+    list-style: none;
+    counter-reset: route-stop;
+}
+
+.route-steps li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    padding: 8px 10px;
+    border-left: 3px solid var(--red);
+    background: #f8faf8;
+    font-size: 13px;
+    counter-increment: route-stop;
+}
+
+.route-steps li::before {
+    content: counter(route-stop);
+    display: grid;
+    flex: 0 0 24px;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    color: var(--green-dark);
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: inset 0 0 0 1px var(--line);
 }
 
 .segment-table {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    max-height: 340px;
-    overflow: auto;
 }
 
 .segment-row {
@@ -417,6 +488,12 @@ button:focus-visible {
     border-radius: 8px;
     background: #fbfcfb;
     font-size: 13px;
+    min-width: 0;
+}
+
+.segment-row span {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .segment-row strong {
@@ -442,6 +519,10 @@ button:focus-visible {
     .control-panel {
         position: static;
     }
+
+    .segment-table {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 560px) {
@@ -455,6 +536,20 @@ button:focus-visible {
     }
 
     .metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .route-line {
+        margin-top: 22px;
+        padding-inline: 14px;
+    }
+
+    .station-node {
+        flex-basis: 102px;
+        min-width: 102px;
+    }
+
+    .route-steps {
         grid-template-columns: 1fr;
     }
 }
