@@ -245,6 +245,8 @@ The GUI includes:
 - shortest-distance route finding using Dijkstra
 - Add Station control for demo graph updates
 - Connect Stations control with distance in meters
+- browser storage so GUI edits survive page refreshes
+- swap start/destination and reset-to-default controls
 - route line visualization
 - total distance in kilometers
 - segment distance table

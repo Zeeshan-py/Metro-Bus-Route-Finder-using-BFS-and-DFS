@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lahore Metro Route Finder GUI</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,17 +18,30 @@
                 </div>
             </div>
 
-            <label for="fromStation">From station</label>
-            <select id="fromStation"></select>
+            <div class="route-selector">
+                <div class="field-group">
+                    <label for="fromStation">From station</label>
+                    <select id="fromStation"></select>
+                </div>
 
-            <label for="toStation">To station</label>
-            <select id="toStation"></select>
+                <button id="swapStations" class="icon-action" type="button" title="Swap start and destination" aria-label="Swap start and destination">&#8645;</button>
+
+                <div class="field-group">
+                    <label for="toStation">To station</label>
+                    <select id="toStation"></select>
+                </div>
+            </div>
 
             <button id="findRoute" class="primary-action" type="button">Find Route</button>
 
             <section class="editor-panel">
-                <h2>Network Editor</h2>
-                <p>Add stations and weighted routes for demo changes.</p>
+                <div class="section-heading">
+                    <div>
+                        <h2>Network Editor</h2>
+                        <p>Changes are saved in this browser.</p>
+                    </div>
+                    <button id="resetNetwork" class="text-action" type="button">Reset data</button>
+                </div>
 
                 <label for="newStation">New station</label>
                 <input id="newStation" type="text" placeholder="Enter station name">
@@ -45,6 +59,11 @@
 
                 <p id="editorStatus" class="editor-status"></p>
             </section>
+
+            <div class="network-stats" aria-label="Network summary">
+                <span><strong id="stationCount">27</strong> stations</span>
+                <span><strong id="routeCount">26</strong> routes</span>
+            </div>
 
             <section class="result-box" aria-live="polite">
                 <p class="result-label">Selected route</p>
@@ -75,6 +94,7 @@
             </div>
 
             <div id="routeLine" class="route-line"></div>
+            <p id="routeMessage" class="route-message" aria-live="polite"></p>
 
             <div class="details-grid">
                 <section>

@@ -21,6 +21,7 @@ body {
     background: var(--bg);
     color: var(--text);
     font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
 }
 
 .app-shell {
@@ -41,6 +42,9 @@ body {
 
 .control-panel {
     padding: 24px;
+    align-self: start;
+    position: sticky;
+    top: 24px;
 }
 
 .brand {
@@ -88,6 +92,34 @@ label {
     font-weight: 700;
 }
 
+.route-selector {
+    display: grid;
+    grid-template-columns: 1fr 44px 1fr;
+    gap: 10px;
+    align-items: end;
+}
+
+.field-group label {
+    margin-top: 0;
+}
+
+.icon-action {
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+    border-color: var(--line);
+    color: var(--green-dark);
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.icon-action:hover,
+.icon-action:focus-visible {
+    border-color: var(--green);
+    background: var(--soft-green);
+}
+
 select,
 input,
 button {
@@ -132,6 +164,25 @@ input {
     border-top: 1px solid var(--line);
 }
 
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.text-action {
+    width: auto;
+    min-height: 30px;
+    padding: 0;
+    border: 0;
+    color: var(--red);
+    background: transparent;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 .editor-panel h2 {
     font-size: 16px;
 }
@@ -152,6 +203,19 @@ input {
 
 .editor-status.error {
     color: var(--red);
+}
+
+.network-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.network-stats strong {
+    color: var(--text);
 }
 
 .result-box {
@@ -200,6 +264,34 @@ input {
 .map-panel {
     padding: 24px;
     overflow: hidden;
+}
+
+.route-message {
+    min-height: 22px;
+    margin: -14px 0 24px;
+    color: var(--red);
+    font-weight: 700;
+}
+
+button,
+select,
+input {
+    transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+select:focus-visible,
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid rgba(18, 130, 76, 0.18);
+    outline-offset: 2px;
+}
+
+.primary-action:hover {
+    background: var(--green-dark);
+}
+
+.secondary-action:hover {
+    background: #d9eee3;
 }
 
 .map-header {
@@ -345,5 +437,24 @@ input {
 
     .legend {
         justify-content: flex-start;
+    }
+
+    .control-panel {
+        position: static;
+    }
+}
+
+@media (max-width: 560px) {
+    .route-selector {
+        grid-template-columns: 1fr 40px 1fr;
+    }
+
+    .control-panel,
+    .map-panel {
+        padding: 18px;
+    }
+
+    .metric-grid {
+        grid-template-columns: 1fr;
     }
 }

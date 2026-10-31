@@ -1,4 +1,6 @@
-const stations = [
+const STORAGE_KEY = "lahore-metro-route-finder-network";
+
+const defaultStations = [
     "Shahdara",
     "Niazi Chowk",
     "Timber Market",
@@ -28,7 +30,7 @@ const stations = [
     "Gajjumata"
 ];
 
-const edges = [
+const defaultEdges = [
     ["Shahdara", "Niazi Chowk", 2200],
     ["Niazi Chowk", "Timber Market", 560],
     ["Timber Market", "Azadi Chowk", 1100],
@@ -57,11 +59,15 @@ const edges = [
     ["Dulu Khurd", "Gajjumata", 830]
 ];
 
+let stations = [...defaultStations];
+let edges = defaultEdges.map((edge) => [...edge]);
+
 const graph = new Map();
 
 const fromSelect = document.getElementById("fromStation");
 const toSelect = document.getElementById("toStation");
 const findRoute = document.getElementById("findRoute");
+const swapStationsButton = document.getElementById("swapStations");
 const newStationInput = document.getElementById("newStation");
 const addStationButton = document.getElementById("addStation");
 const routeFromSelect = document.getElementById("routeFrom");
@@ -69,15 +75,40 @@ const routeToSelect = document.getElementById("routeTo");
 const routeWeightInput = document.getElementById("routeWeight");
 const connectStationsButton = document.getElementById("connectStations");
 const editorStatus = document.getElementById("editorStatus");
+const resetNetworkButton = document.getElementById("resetNetwork");
+const stationCount = document.getElementById("stationCount");
+const routeCount = document.getElementById("routeCount");
 const routeLine = document.getElementById("routeLine");
 const routeSteps = document.getElementById("routeSteps");
 const segmentTable = document.getElementById("segmentTable");
 const routeTitle = document.getElementById("routeTitle");
 const distanceValue = document.getElementById("distanceValue");
 const stationValue = document.getElementById("stationValue");
+const routeMessage = document.getElementById("routeMessage");
 
 function formatKm(meters) {
     return `${(meters / 1000).toFixed(2)} km`;
+}
+
+function loadNetwork() {
+    try {
+        const savedNetwork = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (Array.isArray(savedNetwork?.stations) && Array.isArray(savedNetwork?.edges)) {
+            stations = savedNetwork.stations;
+            edges = savedNetwork.edges;
+        }
+    } catch {
+        localStorage.removeItem(STORAGE_KEY);
+    }
+}
+
+function saveNetwork() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ stations, edges }));
+}
+
+function updateNetworkStats() {
+    stationCount.textContent = stations.length;
+    routeCount.textContent = edges.length;
 }
 
 function rebuildGraph() {
@@ -111,6 +142,7 @@ function refreshSelects() {
     fillSelect(toSelect, toSelect.value || "Gajjumata");
     fillSelect(routeFromSelect, routeFromSelect.value || "Shahdara");
     fillSelect(routeToSelect, routeToSelect.value || "Gajjumata");
+    updateNetworkStats();
 }
 
 function setEditorStatus(message, isError = false) {
@@ -213,8 +245,9 @@ function updateRoute() {
     const result = dijkstra(start, destination);
 
     routeTitle.textContent = `${start} to ${destination}`;
-    distanceValue.textContent = formatKm(result.distance);
+    distanceValue.textContent = result.path.length ? formatKm(result.distance) : "--";
     stationValue.textContent = result.path.length;
+    routeMessage.textContent = result.path.length ? "" : "No connected route exists between these stations.";
     renderRouteLine(result.path);
     renderRouteDetails(result.path);
 }
@@ -234,6 +267,7 @@ function addStation() {
 
     stations.push(station);
     graph.set(station, []);
+    saveNetwork();
     newStationInput.value = "";
     refreshSelects();
     renderRouteLine([]);
@@ -269,15 +303,47 @@ function connectStations() {
 
     routeWeightInput.value = "";
     rebuildGraph();
+    saveNetwork();
+    updateNetworkStats();
+    updateRoute();
+}
+
+function swapStations() {
+    const start = fromSelect.value;
+    fromSelect.value = toSelect.value;
+    toSelect.value = start;
+    updateRoute();
+}
+
+function resetNetwork() {
+    stations = [...defaultStations];
+    edges = defaultEdges.map((edge) => [...edge]);
+    localStorage.removeItem(STORAGE_KEY);
+    rebuildGraph();
+    fromSelect.value = "";
+    toSelect.value = "";
+    routeFromSelect.value = "";
+    routeToSelect.value = "";
+    refreshSelects();
+    setEditorStatus("Official corridor data restored.");
     updateRoute();
 }
 
 findRoute.addEventListener("click", updateRoute);
 fromSelect.addEventListener("change", updateRoute);
 toSelect.addEventListener("change", updateRoute);
+swapStationsButton.addEventListener("click", swapStations);
 addStationButton.addEventListener("click", addStation);
 connectStationsButton.addEventListener("click", connectStations);
+resetNetworkButton.addEventListener("click", resetNetwork);
+newStationInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") addStation();
+});
+routeWeightInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") connectStations();
+});
 
+loadNetwork();
 rebuildGraph();
 refreshSelects();
 updateRoute();
